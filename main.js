@@ -11,6 +11,14 @@ let timer = 30;
 let timerInicial = timer;
 let tiempoRegresivoId = null;
 
+//Audio variables
+let winAudio = new Audio('./sounds/win.wav');
+let loseAudio = new Audio('./sounds/lose.wav');
+let clickAudio = new Audio('./sounds/click.wav');
+let rightAudio = new Audio('./sounds/right.wav');
+let wrongAudio = new Audio('./sounds/wrong.wav');
+    
+
 //DOM HTML
 let seeMovement = document.getElementById("movimientos");
 let seeHits = document.getElementById("aciertos");
@@ -31,6 +39,7 @@ function contarTiempo(){
         if (timer == 0){
     clearInterval(tiempoRegresivoId);
     bloquearTarjetas();
+    loseAudio.play();
         }
        }, 1000)
 }
@@ -39,7 +48,7 @@ function contarTiempo(){
 function bloquearTarjetas(){
     for(let i=0; i<=15; i++){
         let tarjetaBloqueada = document.getElementById(i);
-        tarjetaBloqueada.innerHTML = numbers[i];
+        tarjetaBloqueada.innerHTML =  `<img src="./images/${numbers[i]}.png">`;
         tarjetaBloqueada.disabled = true;
     }
 }
@@ -58,7 +67,8 @@ function destapar(id){
     //Mostrar primer numero
        tarjeta1 = document.getElementById(id);
        primerResultado = numbers[id];
-       tarjeta1.innerHTML = primerResultado;
+       tarjeta1.innerHTML = `<img src="./images/${primerResultado}.png">`;
+       clickAudio.play();
     //Deshabilitar primer boton
     tarjeta1.disabled = true;
 
@@ -67,7 +77,7 @@ function destapar(id){
     //Mostrar segundo numero
       tarjeta2 = document.getElementById(id);
       segundoResultado = numbers[id];
-       tarjeta2.innerHTML = segundoResultado;
+       tarjeta2.innerHTML = `<img src="./images/${segundoResultado}.png">`;
 
        //Deshabilitar segundo boton
 
@@ -84,7 +94,9 @@ function destapar(id){
         //Aumentar aciertos
         aciertos++;
         seeHits.innerHTML =   `Aciertos: ${aciertos}`;
+        rightAudio.play();
         if(aciertos === 8){
+            winAudio.play();
             clearInterval(tiempoRegresivoId);
             seeHits.innerHTML = `Aciertos: ${aciertos} 🚀`;
             seeTime.innerHTML = ` Fantastico solo te demoraste ${timerInicial - timer} segundos`
@@ -92,6 +104,7 @@ function destapar(id){
 
         }
        } else{
+        wrongAudio.play();
         //Mostrar valores de forma momentanea y volver a tapar
         setTimeout(()=>{
             tarjeta1.innerHTML = "";
